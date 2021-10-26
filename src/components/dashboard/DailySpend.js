@@ -9,26 +9,39 @@ function DailySpend(props) {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const date = new Date();
-
+    let monthNumber = date.getMonth();
     let currentMonth = monthNames[date.getMonth()];
 
     const data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-    props.total.forEach((doc) => {
-        let day = parseInt(doc.day) - 1;
-        let value = parseInt(doc.dailySpend);
+    // filter data to get the current month data only if exist.
+    let currentMonthData = props.total.filter ((e) => {return e.month === monthNumber;});
 
-        if (day === 0) {
-            data.fill(0);
-        }
+    // console.log(monthNumber);
+    // console.log(currentMonthData);
 
-        if (data[day] === 0) { 
-            data[day] = value;
-        }else {
-            let addingValues = value + data[day];
-            data[day] = addingValues;
-        } 
-    });
+    // check if it's new month will set all data to zero.
+    // if not will fetch all data from backend and show spend money.
+    if (currentMonthData.length === 0) {
+        data.fill(0);
+    } else {
+        currentMonthData.forEach((doc) => {
+            let day = parseInt(doc.day) - 1;
+            let value = parseInt(doc.dailySpend);
+    
+            if (day === 0) {
+                data.fill(0);
+            }
+            if (data[day] === 0) { 
+                data[day] = value;
+            }else {
+                let addingValues = value + data[day];
+                data[day] = addingValues;
+            }
+    
+        });
+    }
+
              
     // console.log(data);
 
